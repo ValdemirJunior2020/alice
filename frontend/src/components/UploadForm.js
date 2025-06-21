@@ -1,16 +1,23 @@
-// frontend/src/pages/UploadForm.js
 import React, { useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
 import { storage, db } from '../firebaseConfig';
 
+const categorias = [
+  'TIARA',
+  'LAÇOS MINI/PP',
+  'LAÇOS P',
+  'LAÇOS M',
+  'LAÇOS G',
+  'PERSONALIZADOS'
+];
 
 function UploadForm({ fetchLacos }) {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('Crianças');
+  const [category, setCategory] = useState(categorias[0]);
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -43,7 +50,7 @@ function UploadForm({ fetchLacos }) {
       setTitle('');
       setDesc('');
       setPrice('');
-      setCategory('Crianças');
+      setCategory(categorias[0]);
       fetchLacos();
     } catch (err) {
       console.error('[Erro no upload]', err);
@@ -52,17 +59,19 @@ function UploadForm({ fetchLacos }) {
   };
 
   return (
-    <form onSubmit={handleUpload}>
+    <form onSubmit={handleUpload} style={{ background: '#fff', padding: '20px', borderRadius: '10px' }}>
       <input type="file" onChange={(e) => setImage(e.target.files[0])} />
       <input type="text" placeholder="Título" value={title} onChange={(e) => setTitle(e.target.value)} />
       <input type="text" placeholder="Descrição" value={desc} onChange={(e) => setDesc(e.target.value)} />
       <input type="number" placeholder="Preço" value={price} onChange={(e) => setPrice(e.target.value)} />
       <select value={category} onChange={(e) => setCategory(e.target.value)}>
-        <option>Crianças</option>
-        <option>Bebês</option>
-        <option>Adultos</option>
+        {categorias.map((cat, index) => (
+          <option key={index} value={cat}>{cat}</option>
+        ))}
       </select>
-      <button type="submit">Enviar</button>
+      <button type="submit" style={{ backgroundColor: '#d63384', color: 'white', padding: '10px', marginTop: '10px', border: 'none', borderRadius: '8px' }}>
+        Enviar
+      </button>
     </form>
   );
 }

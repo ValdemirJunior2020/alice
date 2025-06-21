@@ -1,0 +1,42 @@
+.navbar {
+  background-color: #ffc0cb;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar h2 {
+  margin: 0;
+  font-weight: bold;
+  color: #d63384;
+}
+
+.navbar a {
+  margin-right: 20px;
+  color: #d63384;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: background-color 0.2s ease;
+}
+
+.navbar a.active {
+  background-color: #d63384;
+  color: white;
+}
+
+.navbar button {
+  background-color: #d63384;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
