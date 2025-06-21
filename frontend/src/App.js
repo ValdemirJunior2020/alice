@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
+import PostList from './pages/PostList'; // ✅ importado
 import Navbar from './components/Navbar';
 import LiveBanner from './components/LiveBanner';
 import './App.css';
@@ -25,6 +26,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/postlist" element={<PostList />} /> {/* ✅ nova rota */}
         </Routes>
       </Router>
 
@@ -49,7 +51,6 @@ function App() {
         💬 Fale no WhatsApp
       </a>
 
-      {/* Mensagem de país com bandeira */}
       <LiveBanner />
     </div>
   );
