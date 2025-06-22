@@ -25,12 +25,32 @@ function App() {
 
         <Routes>
           <Route path="/category/:nome" element={<Home />} />
-
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/postlist" element={<PostList />} />
         </Routes>
+
+        {/* Mensagem de contato acima do botão do WhatsApp */}
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '120px',
+            right: '20px',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            padding: '10px 15px',
+            borderRadius: '12px',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+            zIndex: 1000,
+            maxWidth: '250px',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            color: '#333',
+          }}
+        >
+          Quer comprar ou tirar dúvidas? <br />
+          Fale com a gente pelo WhatsApp! 👇
+        </div>
 
         {/* Botão flutuante do WhatsApp */}
         <a

@@ -11,14 +11,28 @@ const LiveBanner = () => {
         const country = data.country_name;
         const countryCode = data.country_code;
 
-        const actions = [
-          'acabou de visitar a página!',
-          'acabou de comprar 2 laços!',
-          'está navegando pelo catálogo!',
-          'acabou de deixar uma avaliação!',
-          'curtiu os acessórios!',
-          'comprou 4 laços!',
-        ];
+      const actions = [
+  'acabou de visitar a página!',
+  'acabou de comprar 2 laços!',
+  'está navegando pelo catálogo!',
+  'acabou de deixar uma avaliação!',
+  'curtiu os acessórios!',
+  'comprou 4 laços!',
+  'fez um pedido em São Paulo!',
+  'acabou de curtir um laço em Salvador!',
+  'realizou uma compra em Belo Horizonte!',
+  'visitou nosso site direto de Curitiba!',
+  'acabou de deixar um comentário em Fortaleza!',
+  'visitou a loja de Recife!',
+  'finalizou a compra em Brasília!',
+  'abriu a página de laços em Porto Alegre!',
+  'visualizou um laço em Manaus!',
+  'compartilhou um produto de Goiânia!',
+  'adicionou um laço ao carrinho em Campinas!',
+  'clicou no botão de WhatsApp em Natal!',
+  'deixou uma avaliação 5 estrelas direto de João Pessoa!',
+];
+
 
         const randomAction = actions[Math.floor(Math.random() * actions.length)];
 

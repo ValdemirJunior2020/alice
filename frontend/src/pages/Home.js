@@ -1,3 +1,4 @@
+// frontend/src/pages/Home.js
 import React, { useEffect, useState, useCallback } from 'react';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -20,11 +21,13 @@ function Home() {
   const fetchLacos = useCallback(async () => {
     const querySnapshot = await getDocs(collection(db, 'lacos'));
     const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    const normalize = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 
-const filtered = nome
-  ? data.filter(l => normalize(l.category) === normalize(nome))
-  : data;
+    const normalize = str =>
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
+    const filtered = nome
+      ? data.filter(l => normalize(l.category) === normalize(nome))
+      : data;
 
     setLacos(filtered);
   }, [nome]);
@@ -42,7 +45,28 @@ const filtered = nome
 
   return (
     <div style={{ padding: '20px' }}>
-      <h2 style={{ textAlign: 'center', color: '#d63384', marginBottom: '20px' }}>🎀 Nossos Laços 🎀</h2>
+      {/* Overlay */}
+      <div style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.4)',
+        padding: '30px',
+        borderRadius: '12px',
+        textAlign: 'center',
+        marginBottom: '40px',
+        maxWidth: '800px',
+        margin: 'auto',
+      }}>
+        <h2 style={{ color: '#d63384' }}>🎀 Bem-vinda à Alice Acessórios 🎀</h2>
+        <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'black' }}>
+          Cada laço é feito à mão com muito carinho para encantar bebês, crianças e adultos. 💕
+        </p>
+      </div>
+
+      {/* Título da seção */}
+      <h2 style={{ textAlign: 'center', color: '#d63384', marginBottom: '20px' }}>
+        🎀 Nossos Laços 🎀
+      </h2>
+
+      {/* Galeria de laços */}
       <div style={{
         display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px'
       }}>
@@ -95,7 +119,7 @@ const filtered = nome
         ))}
       </div>
 
-      {/* Image Modal */}
+      {/* Modal da imagem ampliada */}
       {showModal && selectedImage && (
         <div
           onClick={() => setShowModal(false)}
