@@ -1,74 +1,125 @@
-import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
-import LacoCard from '../components/LacoCard';
+import React, { useEffect, useState, useCallback } from 'react';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { db, auth } from '../firebaseConfig';
+import { useParams } from 'react-router-dom';
 
 function Home() {
   const [lacos, setLacos] = useState([]);
+  const [user, setUser] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const { nome } = useParams();
 
-  const fetchLacos = async () => {
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+  }, []);
+
+  const fetchLacos = useCallback(async () => {
     const querySnapshot = await getDocs(collection(db, 'lacos'));
-    const lacosList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    setLacos(lacosList);
+    const data = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const normalize = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
+const filtered = nome
+  ? data.filter(l => normalize(l.category) === normalize(nome))
+  : data;
+
+    setLacos(filtered);
+  }, [nome]);
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Tem certeza que deseja deletar este laço?')) {
+      await deleteDoc(doc(db, 'lacos', id));
+      fetchLacos();
+    }
   };
 
   useEffect(() => {
     fetchLacos();
-  }, []);
+  }, [fetchLacos]);
 
   return (
-    <>
-      {/* Seção de fundo com mensagem */}
-      <div
-        style={{
-          position: 'relative',
-          
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          height: '80vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    <div style={{ padding: '20px' }}>
+      <h2 style={{ textAlign: 'center', color: '#d63384', marginBottom: '20px' }}>🎀 Nossos Laços 🎀</h2>
+      <div style={{
+        display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px'
+      }}>
+        {lacos.map(laco => (
+          <div key={laco.id} style={{
+            width: '220px',
+            backgroundColor: 'rgba(255, 255, 255, 0.85)',
+            padding: '10px',
+            borderRadius: '12px',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+            textAlign: 'center'
+          }}>
+            <img
+              src={laco.imageUrl}
+              alt={laco.title}
+              onClick={() => {
+                setSelectedImage(laco.imageUrl);
+                setShowModal(true);
+              }}
+              style={{
+                width: '100%',
+                height: '200px',
+                objectFit: 'cover',
+                borderRadius: '10px',
+                cursor: 'pointer'
+              }}
+            />
+            <h4 style={{ color: '#d63384', margin: '10px 0 5px' }}>{laco.title}</h4>
+            <p style={{ fontSize: '14px', color: '#333' }}>{laco.desc}</p>
+            <p style={{ fontWeight: 'bold', color: '#000' }}>R$ {laco.price}</p>
+            <p style={{ fontSize: '13px', color: '#666' }}>Categoria: {laco.category}</p>
 
-            padding: '40px',
-            borderRadius: '20px',
-            maxWidth: '700px',
-            textAlign: 'center',
-          }}
-        >
-          <h1 style={{ color: '#d63384', fontSize: '2.2rem' }}>
-            Bem-vindo à nossa coleção de laços encantadores!
-          </h1>
-          <p style={{ fontSize: '1.1rem', marginTop: '10px', color: 'white', fontWeight: 'bold' }}>
-  Cada laço é feito à mão com muito carinho para encantar bebês, crianças e adultos. 💕
-</p>
-
-        </div>
+            {user && (
+              <button
+                onClick={() => handleDelete(laco.id)}
+                style={{
+                  backgroundColor: '#dc3545',
+                  color: '#fff',
+                  border: 'none',
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  marginTop: '10px',
+                  cursor: 'pointer'
+                }}
+              >
+                🗑️ Deletar
+              </button>
+            )}
+          </div>
+        ))}
       </div>
 
-      {/* Seção dos laços */}
-      <div style={{ padding: '40px 20px', textAlign: 'center' }}>
-        <h2 style={{ color: '#d63384', marginBottom: '30px' }}>🌸 Nossos Laços</h2>
-
+      {/* Image Modal */}
+      {showModal && selectedImage && (
         <div
+          onClick={() => setShowModal(false)}
           style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.8)',
             display: 'flex',
-            flexWrap: 'wrap',
-            gap: '30px',
+            alignItems: 'center',
             justifyContent: 'center',
+            zIndex: 9999,
           }}
         >
-          {lacos.map((laco) => (
-            <LacoCard key={laco.id} laco={laco} fetchLacos={fetchLacos} />
-          ))}
+          <img
+            src={selectedImage}
+            alt="Zoom"
+            style={{ maxHeight: '90%', maxWidth: '90%', borderRadius: '10px' }}
+          />
         </div>
-      </div>
-    </>
+      )}
+    </div>
   );
 }
 

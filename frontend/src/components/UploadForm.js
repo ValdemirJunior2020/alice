@@ -9,7 +9,7 @@ const categorias = [
   'LAÇOS P',
   'LAÇOS M',
   'LAÇOS G',
-  'PERSONALIZADOS'
+  'CONJUNTOS'
 ];
 
 function UploadForm({ fetchLacos }) {
@@ -27,14 +27,11 @@ function UploadForm({ fetchLacos }) {
     }
 
     try {
-      console.log('[Upload] Iniciando upload da imagem...');
       const filename = `${Date.now()}-${image.name.replace(/\s+/g, '_')}`;
       const storageRef = ref(storage, `lacos/${filename}`);
       await uploadBytes(storageRef, image);
-      console.log('[Upload] Imagem enviada com sucesso.');
 
       const imageUrl = await getDownloadURL(storageRef);
-      console.log('[Download URL]', imageUrl);
 
       await addDoc(collection(db, 'lacos'), {
         title,

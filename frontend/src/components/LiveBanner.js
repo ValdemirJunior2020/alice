@@ -11,7 +11,6 @@ const LiveBanner = () => {
         const country = data.country_name;
         const countryCode = data.country_code;
 
-        // Mensagens simuladas
         const actions = [
           'acabou de visitar a página!',
           'acabou de comprar 2 laços!',
@@ -23,7 +22,9 @@ const LiveBanner = () => {
 
         const randomAction = actions[Math.floor(Math.random() * actions.length)];
 
-        setMessage(`🇨🇽 ${country ? `🇨🇽`.replace('🇨🇽', getFlagEmoji(countryCode)) : ''} Alguém de ${country} ${randomAction}`);
+        setMessage(
+          `${country ? `${getFlagEmoji(countryCode)} ` : ''}Alguém de ${country} ${randomAction}`
+        );
       } catch (err) {
         console.log('Erro ao obter localização:', err);
       }
@@ -53,9 +54,16 @@ const LiveBanner = () => {
         fontWeight: 'bold',
         fontSize: '14px',
         boxShadow: '0 -2px 6px rgba(0,0,0,0.1)',
+        animation: 'flash 1.5s infinite',
       }}
     >
       {message}
+      <style>{`
+        @keyframes flash {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+      `}</style>
     </div>
   );
 };
